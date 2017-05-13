@@ -3,8 +3,6 @@
 
 
 
-
-
 // SDK Needs to create video and canvas nodes in the DOM in order to function
 // Here we are adding those nodes a predefined div.
 $(document).ready(function() {
@@ -89,23 +87,13 @@ $(document).ready(function() {
   publishSampleMessage();
 
   pubnub.addListener({
-    //status: function(statusEvent) {
-    //  if (statusEvent.category === "PNConnectedCategory") {
-    //    publishSampleMessage();
-    //  }
-    //},
     message: function(message) {
       console.log("New Message!!", message);
-    },
-    presence: function(presenceEvent) {
-      // handle presence
     }
   });
-  console.log("Subscribing..");
   pubnub.subscribe({
     channels: ['main']
   });
-
 
   // Start detector.
   if (detector && !detector.isRunning) {
