@@ -1,72 +1,66 @@
 // SDK Needs to create video and canvas nodes in the DOM in order to function
 // Here we are adding those nodes a predefined div.
-$(document).ready(function(){
-  console.log('were in')
-var divRoot = $("#affdex_elements")[0];
-var width = 640;
-var height = 480;
-var faceMode = affdex.FaceDetectorMode.LARGE_FACES;
+$(document).ready(function() {
+  var divRoot = $("#affdex_elements")[0];
+  var width = 640;
+  var height = 480;
+  var faceMode = affdex.FaceDetectorMode.LARGE_FACES;
 //Construct a CameraDetector and specify the image width / height and face detector mode.
-var detector = new affdex.CameraDetector(divRoot, width, height, faceMode);
+  var detector = new affdex.CameraDetector(divRoot, width, height, faceMode);
 
 //Enable detection of all Expressions, Emotions and Emojis classifiers.
-detector.detectAllEmotions();
-detector.detectAllExpressions();
-detector.detectAllEmojis();
-detector.detectAllAppearance();
+  detector.detectAllEmotions();
+  detector.detectAllExpressions();
+  detector.detectAllEmojis();
+  detector.detectAllAppearance();
 
 //Add a callback to notify when the detector is initialized and ready for runing.
-detector.addEventListener("onInitializeSuccess", function() {
-  log('#logs', "The detector reports initialized");
-  //Display canvas instead of video feed because we want to draw the feature points on it
-  $("#face_video_canvas").css("display", "block");
-  $("#face_video").css("display", "none");
-});
+  detector.addEventListener("onInitializeSuccess", function() {
+    log('#logs', "The detector reports initialized");
+    //Display canvas instead of video feed because we want to draw the feature points on it
+    $("#face_video_canvas").css("display", "block");
+    $("#face_video").css("display", "none");
+  });
 //Add a callback to notify when camera access is allowed
-detector.addEventListener("onWebcamConnectSuccess", function() {
-  console.log("im getting clicked")
-  log('#logs', "Webcam access allowed");
-});
+  detector.addEventListener("onWebcamConnectSuccess", function() {
+    log('#logs', "Webcam access allowed");
+  });
 
 //Add a callback to notify when camera access is denied
-detector.addEventListener("onWebcamConnectFailure", function() {
-  log('#logs', "webcam denied");
-  console.log("Webcam access denied");
-});
+  detector.addEventListener("onWebcamConnectFailure", function() {
+    log('#logs', "webcam denied");
+  });
 
 //Add a callback to notify when detector is stopped
-detector.addEventListener("onStopSuccess", function() {
-  log('#logs', "The detector reports stopped");
-  $("#results").html("");
-});
+  detector.addEventListener("onStopSuccess", function() {
+    log('#logs', "The detector reports stopped");
+    $("#results").html("");
+  });
 
 //Add a callback to receive the results from processing an image.
 //The faces object contains the list of the faces detected in an image.
 //Faces object contains probabilities for all the different expressions, emotions and appearance metrics
-detector.addEventListener("onImageResultsSuccess", function(faces, image, timestamp) {
-  console.log(faces);
-  $('#results').html("");
-  log('#results', "Timestamp: " + timestamp.toFixed(2));
-  log('#results', "Number of faces found: " + faces.length);
-  if (faces.length > 0) {
-    log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
-    log('#results', "Emotions: " + JSON.stringify(faces[0].emotions, function(key, val) {
-      return val.toFixed ? Number(val.toFixed(0)) : val;
-    }));
-    log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
-      return val.toFixed ? Number(val.toFixed(0)) : val;
-    }));
-    log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
-    drawFeaturePoints(image, faces[0].featurePoints);
+  detector.addEventListener("onImageResultsSuccess", function(faces, image, timestamp) {
+    $('#results').html("");
+    log('#results', "Timestamp: " + timestamp.toFixed(2));
+    log('#results', "Number of faces found: " + faces.length);
+    if (faces.length > 0) {
+      log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
+      log('#results', "Emotions: " + JSON.stringify(faces[0].emotions, function(key, val) {
+          return val.toFixed ? Number(val.toFixed(0)) : val;
+        }));
+      log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
+          return val.toFixed ? Number(val.toFixed(0)) : val;
+        }));
+      log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
+      drawFeaturePoints(image, faces[0].featurePoints);
+    }
+  });
+  if (detector && !detector.isRunning) {
+    $("#logs").html("");
+    detector.start();
   }
-});
-if (detector && !detector.isRunning) {
-  console.log('hi');
-  $("#logs").html("");
-  detector.start();
-  console.log('post-start ', detector);
-}
-log('#logs', "Clicked the start button");
+  log('#logs', "Clicked the start button");
 
 })
 function log(node_name, msg) {
@@ -76,10 +70,8 @@ function log(node_name, msg) {
 //function executes when Start button is pushed.
 function onStart() {
   if (detector && !detector.isRunning) {
-    console.log('hi');
     $("#logs").html("");
     detector.start();
-    console.log('post-start ', detector);
   }
   log('#logs', "Clicked the start button");
 }
@@ -102,7 +94,6 @@ function onReset() {
     $('#results').html("");
   }
 };
-
 
 
 //Draw the detected facial feature points on the image

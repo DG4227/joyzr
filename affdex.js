@@ -193,7 +193,6 @@ affdex.Detector = function() {
 //Define the prototypes for the functions that are going to be overrridden
 //By children classes
 affdex.Detector.prototype.start = function() {
-  console.log('started')
   if (!this.isRunning) {
     var url = affdex.getAffdexDotJsLocation();
     XHRWorker(url+"affdex-worker.js", function(worker) {
@@ -333,9 +332,7 @@ affdex.CameraDetector = function(element, imgW, imgH, faceMode) {
   };
 
   self.start = function() {
-    console.log('stff');
     if(!self.isRunning) {
-      console.log('stff22');
       ctor();
       var url = affdex.getAffdexDotJsLocation() + adapterJSVersion;
       console.log(url);
