@@ -335,7 +335,6 @@ affdex.CameraDetector = function(element, imgW, imgH, faceMode) {
     if(!self.isRunning) {
       ctor();
       var url = affdex.getAffdexDotJsLocation() + adapterJSVersion;
-      console.log(url);
       require(docElement, url, function() {
         self._startCamera();
       },

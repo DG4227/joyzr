@@ -1,3 +1,10 @@
+// pub nub stuff
+
+
+
+
+
+
 // SDK Needs to create video and canvas nodes in the DOM in order to function
 // Here we are adding those nodes a predefined div.
 $(document).ready(function() {
@@ -5,41 +12,41 @@ $(document).ready(function() {
   var width = 640;
   var height = 480;
   var faceMode = affdex.FaceDetectorMode.LARGE_FACES;
-//Construct a CameraDetector and specify the image width / height and face detector mode.
+  //Construct a CameraDetector and specify the image width / height and face detector mode.
   var detector = new affdex.CameraDetector(divRoot, width, height, faceMode);
 
-//Enable detection of all Expressions, Emotions and Emojis classifiers.
+  //Enable detection of all Expressions, Emotions and Emojis classifiers.
   detector.detectAllEmotions();
   detector.detectAllExpressions();
-  detector.detectAllEmojis();
   detector.detectAllAppearance();
 
-//Add a callback to notify when the detector is initialized and ready for runing.
+  //Add a callback to notify when the detector is initialized and ready for runing.
   detector.addEventListener("onInitializeSuccess", function() {
     log('#logs', "The detector reports initialized");
     //Display canvas instead of video feed because we want to draw the feature points on it
     $("#face_video_canvas").css("display", "block");
     $("#face_video").css("display", "none");
   });
-//Add a callback to notify when camera access is allowed
+
+  //Add a callback to notify when camera access is allowed
   detector.addEventListener("onWebcamConnectSuccess", function() {
     log('#logs', "Webcam access allowed");
   });
 
-//Add a callback to notify when camera access is denied
+  //Add a callback to notify when camera access is denied
   detector.addEventListener("onWebcamConnectFailure", function() {
     log('#logs', "webcam denied");
   });
 
-//Add a callback to notify when detector is stopped
+  //Add a callback to notify when detector is stopped
   detector.addEventListener("onStopSuccess", function() {
     log('#logs', "The detector reports stopped");
     $("#results").html("");
   });
 
-//Add a callback to receive the results from processing an image.
-//The faces object contains the list of the faces detected in an image.
-//Faces object contains probabilities for all the different expressions, emotions and appearance metrics
+  //Add a callback to receive the results from processing an image.
+  //The faces object contains the list of the faces detected in an image.
+  //Faces object contains probabilities for all the different expressions, emotions and appearance metrics
   detector.addEventListener("onImageResultsSuccess", function(faces, image, timestamp) {
     $('#results').html("");
     log('#results', "Timestamp: " + timestamp.toFixed(2));
@@ -56,13 +63,58 @@ $(document).ready(function() {
       drawFeaturePoints(image, faces[0].featurePoints);
     }
   });
+
+  // Subscribe to pubnub
+  var pubnub = new PubNub({
+    publishKey : 'pub-c-24b2e5cd-04dd-4ccd-a99d-3fa20345d62e',
+    subscribeKey : 'sub-c-ec1c11c0-3813-11e7-89f4-02ee2ddab7fe'
+  });
+
+
+  function publishSampleMessage() {
+    console.log("Since we're publishing on subscribe connectEvent, we're sure we'll receive the following publish.");
+    var publishConfig = {
+      channel : "main",
+      message : {
+        "type": "EMOTIONS",
+        "foo": "bar",
+        "id": 42,
+        "text": "BLOCKS"
+      }
+    };
+    pubnub.publish(publishConfig, function(status, response) {
+      console.log(status, response);
+    })
+  }
+  publishSampleMessage();
+
+  pubnub.addListener({
+    //status: function(statusEvent) {
+    //  if (statusEvent.category === "PNConnectedCategory") {
+    //    publishSampleMessage();
+    //  }
+    //},
+    message: function(message) {
+      console.log("New Message!!", message);
+    },
+    presence: function(presenceEvent) {
+      // handle presence
+    }
+  });
+  console.log("Subscribing..");
+  pubnub.subscribe({
+    channels: ['main']
+  });
+
+
+  // Start detector.
   if (detector && !detector.isRunning) {
-    $("#logs").html("");
+    $('#logs').html("");
     detector.start();
   }
   log('#logs', "Clicked the start button");
+});
 
-})
 function log(node_name, msg) {
   $(node_name).append("<span>" + msg + "</span><br />")
 }
