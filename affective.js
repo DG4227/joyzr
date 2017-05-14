@@ -119,6 +119,8 @@ $(document).ready(function() {
     <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 
     <p> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
+
+    <footer> Powered by <img src="http://i.imgur.com/Kfh7DCq.png"/> </footer>
     `;
     w.document.open().write(html);
   }
