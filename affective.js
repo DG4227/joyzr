@@ -22,9 +22,9 @@ $(document).ready(function() {
   detector.addEventListener("onInitializeSuccess", function() {
     log('#logs', "The detector reports initialized");
     //Display canvas instead of video feed because we want to draw the feature points on it
-    $("#face_video_canvas").css("display", "block");
-    $("#face_video_canvas").css("margin", "auto");
-    $("#face_video").css("display", "none");
+    //$("#face_video_canvas").css("display", "block");
+    //$("#face_video_canvas").css("margin", "auto");
+    //$("#face_video").css("display", "none");
   });
 
   //Add a callback to notify when camera access is allowed
@@ -60,7 +60,7 @@ $(document).ready(function() {
           return val.toFixed ? Number(val.toFixed(0)) : val;
         }));
       log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
-      drawFeaturePoints(image, faces[0].featurePoints);
+      //drawFeaturePoints(image, faces[0].featurePoints);
     }
   }
 );
@@ -114,9 +114,6 @@ $(document).ready(function() {
     HAS_TRIGGERED = true;
     var data = message.data;
     var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
-
-    // BOSKIN if you've got the time, it would be amazing if you could format the HTML variable here to be a fully-fledged beautiful things. Jake's suggestion is to do it in an alternate file.
-    
 
     var html =
     `
@@ -198,20 +195,20 @@ function onReset() {
   }
 };
 
-//Draw the detected facial feature points on the image
-function drawFeaturePoints(img, featurePoints) {
-  var contxt = $('#face_video_canvas')[0].getContext('2d');
-
-  var hRatio = contxt.canvas.width / img.width;
-  var vRatio = contxt.canvas.height / img.height;
-  var ratio = Math.min(hRatio, vRatio);
-
-  contxt.strokeStyle = "#FFFFFF";
-  for (var id in featurePoints) {
-    contxt.beginPath();
-    contxt.arc(featurePoints[id].x,
-      featurePoints[id].y, 2, 0, 2 * Math.PI);
-    contxt.stroke();
-
-  }
-}
+////Draw the detected facial feature points on the image
+//function drawFeaturePoints(img, featurePoints) {
+//  var contxt = $('#face_video_canvas')[0].getContext('2d');
+//
+//  var hRatio = contxt.canvas.width / img.width;
+//  var vRatio = contxt.canvas.height / img.height;
+//  var ratio = Math.min(hRatio, vRatio);
+//
+//  contxt.strokeStyle = "#FFFFFF";
+//  for (var id in featurePoints) {
+//    contxt.beginPath();
+//    contxt.arc(featurePoints[id].x,
+//      featurePoints[id].y, 2, 0, 2 * Math.PI);
+//    contxt.stroke();
+//
+//  }
+//}
