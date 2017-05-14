@@ -126,7 +126,7 @@ $(document).ready(function() {
         <h1 style="text-align:center;font-size:60px;font-family: 'Pacifico'"> Cheer up! </h1>
         <iframe style="display:block;margin:auto" src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 
-        <p style="text-align:center;font-size:30px;font-family: 'Roboto', sans-serif;"> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
+        <p style="text-align:center;font-size:40px;font-family: 'Roboto', sans-serif;"> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
 
         <footer style="text-align:center;font-size:30px;font-family: 'Roboto', sans-serif;"> Powered by</footer>
         <img style="display:block;margin:auto;height:80px;width:200px;" src="http://i.imgur.com/Kfh7DCq.png"/>
