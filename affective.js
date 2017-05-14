@@ -23,6 +23,7 @@ $(document).ready(function() {
     log('#logs', "The detector reports initialized");
     //Display canvas instead of video feed because we want to draw the feature points on it
     $("#face_video_canvas").css("display", "block");
+    $("#face_video_canvas").css("margin", "auto");
     $("#face_video").css("display", "none");
   });
 
