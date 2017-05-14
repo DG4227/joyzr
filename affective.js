@@ -1,6 +1,6 @@
-// pub nub stuff
-var queue = []
-
+// Globals
+var queue = [];
+var HAS_TRIGGERED = false;
 
 
 // SDK Needs to create video and canvas nodes in the DOM in order to function
@@ -71,7 +71,7 @@ $(document).ready(function() {
   });
 
 
-   // setInterval(aggregateEmotionsAndPublish, 5000)
+   setInterval(aggregateEmotionsAndPublish, 1000);
 
 
    function aggregateEmotions(){
@@ -102,45 +102,37 @@ $(document).ready(function() {
   }
 
   function aggregateEmotionsAndPublish(){
-    var val = aggregateEmotions()
-    publishMessage(val)
+    if (HAS_TRIGGERED) {
+      return;
+    }
+    var val = aggregateEmotions();
+    publishMessage(val);
   }
 
-  function testWindow(message) {
-    var data = message.data
+  function openWindow(message) {
+    HAS_TRIGGERED = true;
+    var data = message.data;
     var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
     var html =
     `
     <h1> Cheer up! </h1>
     <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 
-    <p> And don't forget to grab some  &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
-    `
-    w.document.open().write(html)
+    <p> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
+    `;
+    w.document.open().write(html);
   }
-
-  var msg = { "type": "PROMPT", "data": { "image": "http://giphy.com/embed/12PA1eI8FBqEBa", "location": { "name": "Penguin Ice Cream", "location_longitude": "-73.99489694603201", "location_latitude": "40.71706120259381", "distance": "977" }, "time_to_destination": 910, "distance": 2.542 } }
-  testWindow(msg)
 
   pubnub.addListener({
     message: function(message) {
-      console.log("we're listning", message)
-      message = message.message
+      console.log("we're listning", message);
+      message = message.message;
       if (message.type !== "PROMPT") {
-          return
+          return;
       }
-      console.log("popping")
-      var w = window.open('http://www.google.com', '_blank', 'toolbar=0,location=0,menubar=0');
-
-      var html =
-      `
-      <img src=${message.image}>
-      `
-
-
-      w.document.open().write(html)
+      openWindow(message);
     }
-  })
+  });
 
   pubnub.subscribe({
     channels: ['main']
