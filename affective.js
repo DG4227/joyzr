@@ -1,5 +1,5 @@
 // pub nub stuff
-
+var queue = []
 
 
 
@@ -52,14 +52,17 @@ $(document).ready(function() {
     if (faces.length > 0) {
       log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
       log('#results', "Emotions: " + JSON.stringify(faces[0].emotions, function(key, val) {
+        queue.push(faces[0].emotions)
           return val.toFixed ? Number(val.toFixed(0)) : val;
         }));
       log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
           return val.toFixed ? Number(val.toFixed(0)) : val;
         }));
+      log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
       drawFeaturePoints(image, faces[0].featurePoints);
     }
-  });
+  }
+);
 
   // Subscribe to pubnub
   var pubnub = new PubNub({
@@ -68,26 +71,43 @@ $(document).ready(function() {
   });
 
 
-  function publishSampleMessage() {
-    console.log("Since we're publishing on subscribe connectEvent, we're sure we'll receive the following publish.");
+  // setInterval(aggregateEmotionsAndPublish, 5000)
+
+
+   function aggregateEmotions(){
+     var valence = queue.reduce(function(acc, val) {
+        return acc + val.valence;
+      }, 0);
+     var engagement = queue.reduce(function(acc, val) {
+        return acc + val.engagement;
+      }, 0);
+     var length = queue.length
+     var avgValence = valence / length
+     var avgEngagement = engagement / length
+     queue = []
+     var emotions = {"valence": avgValence, "engagement": avgEngagement}
+     return emotions
+   }
+
+  function publishMessage(emotions) {
     var publishConfig = {
       channel : "main",
       message : {
         "type": "EMOTIONS",
-        "foo": "bar",
-        "id": 42,
-        "text": "BLOCKS"
+        "data": emotions
       }
     };
-    pubnub.publish(publishConfig, function(status, response) {
-      console.log(status, response);
+   pubnub.publish(publishConfig, function(status, response) {
     })
   }
-  publishSampleMessage();
+
+  function aggregateEmotionsAndPublish(){
+    var val = aggregateEmotions()
+    publishMessage(val)
+  }
 
   pubnub.addListener({
     message: function(message) {
-      console.log("New Message!!", message);
     }
   });
   pubnub.subscribe({
@@ -101,6 +121,8 @@ $(document).ready(function() {
   }
   log('#logs', "Clicked the start button");
 });
+
+
 
 function log(node_name, msg) {
   $(node_name).append("<span>" + msg + "</span><br />")
@@ -133,7 +155,6 @@ function onReset() {
     $('#results').html("");
   }
 };
-
 
 //Draw the detected facial feature points on the image
 function drawFeaturePoints(img, featurePoints) {
