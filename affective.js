@@ -111,6 +111,7 @@ $(document).ready(function() {
     var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
     var html =
     `
+    <h1> Cheer up! </h1>
     <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 
     <p> And don't forget to grab some  &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
