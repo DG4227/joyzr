@@ -119,12 +119,22 @@ $(document).ready(function() {
 
     var html =
     `
-    <h1> Cheer up! </h1>
-    <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    <head>
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
+      </head>
+    <body>
+      <div style="width:50%;margin:auto">
+        <h1 style="text-align:center;font-size:60px;font-family: 'Pacifico'"> Cheer up! </h1>
+        <iframe style="display:block;margin:auto" src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
 
-    <p> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
+        <p style="text-align:center;font-size:30px;font-family: 'Roboto', sans-serif;"> Treat yourself with some &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
 
-    <footer> Powered by <img src="http://i.imgur.com/Kfh7DCq.png"/> </footer>
+        <footer style="text-align:center;font-size:30px;font-family: 'Roboto', sans-serif;"> Powered by</footer>
+        <img style="display:block;margin:auto;height:80px;width:200px;" src="http://i.imgur.com/Kfh7DCq.png"/>
+      </div>
+    </body>
+
     `;
     w.document.open().write(html);
   }
