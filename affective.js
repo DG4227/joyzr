@@ -113,6 +113,10 @@ $(document).ready(function() {
     HAS_TRIGGERED = true;
     var data = message.data;
     var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
+
+    // BOSKIN if you've got the time, it would be amazing if you could format the HTML variable here to be a fully-fledged beautiful things. Jake's suggestion is to do it in an alternate file.
+    
+
     var html =
     `
     <h1> Cheer up! </h1>
