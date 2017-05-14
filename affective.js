@@ -102,14 +102,14 @@ $(document).ready(function() {
   }
 
   function aggregateEmotionsAndPublish(){
-    if (HAS_TRIGGERED) {
-      return;
-    }
     var val = aggregateEmotions();
     publishMessage(val);
   }
 
   function openWindow(message) {
+    if (HAS_TRIGGERED) {
+      return;
+    }
     HAS_TRIGGERED = true;
     var data = message.data;
     var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
@@ -130,6 +130,7 @@ $(document).ready(function() {
       if (message.type !== "PROMPT") {
           return;
       }
+
       openWindow(message);
     }
   });
