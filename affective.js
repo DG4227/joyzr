@@ -71,7 +71,7 @@ $(document).ready(function() {
   });
 
 
-  // setInterval(aggregateEmotionsAndPublish, 5000)
+   // setInterval(aggregateEmotionsAndPublish, 5000)
 
 
    function aggregateEmotions(){
@@ -106,10 +106,42 @@ $(document).ready(function() {
     publishMessage(val)
   }
 
+  function testWindow(message) {
+    var data = message.data
+    var w = window.open('', '_blank', 'toolbar=0,location=0,menubar=0');
+    var html =
+    `
+    <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+    `
+    w.document.open().write(html)
+  }
+
+  var msg = { "type": "PROMPT", "data": { "image": "http://giphy.com/embed/12PA1eI8FBqEBa", "location": { "name": "Penguin Ice Cream", "location_longitude": "-73.99489694603201", "location_latitude": "40.71706120259381", "distance": "977" }, "time_to_destination": 910, "distance": 2.542 } }
+  testWindow(msg)
+
+
+
+
   pubnub.addListener({
     message: function(message) {
+      console.log("we're listning", message)
+      message = message.message
+      if (message.type !== "PROMPT") {
+          return
+      }
+      console.log("popping")
+      var w = window.open('http://www.google.com', '_blank', 'toolbar=0,location=0,menubar=0');
+
+      var html =
+      `
+      <img src=${message.image}>
+      `
+
+
+      w.document.open().write(html)
     }
-  });
+  })
+
   pubnub.subscribe({
     channels: ['main']
   });
