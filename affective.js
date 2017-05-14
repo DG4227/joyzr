@@ -112,15 +112,14 @@ $(document).ready(function() {
     var html =
     `
     <iframe src="${data.image}" width="480" height="478" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+
+    <p> And don't forget to grab some  &#x1F366 at ${data.location.name}, just ${Math.floor(data.time_to_destination / 60)} minutes away! </p>
     `
     w.document.open().write(html)
   }
 
   var msg = { "type": "PROMPT", "data": { "image": "http://giphy.com/embed/12PA1eI8FBqEBa", "location": { "name": "Penguin Ice Cream", "location_longitude": "-73.99489694603201", "location_latitude": "40.71706120259381", "distance": "977" }, "time_to_destination": 910, "distance": 2.542 } }
   testWindow(msg)
-
-
-
 
   pubnub.addListener({
     message: function(message) {
