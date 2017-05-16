@@ -21,10 +21,10 @@ $(document).ready(function() {
   //Add a callback to notify when the detector is initialized and ready for runing.
   detector.addEventListener("onInitializeSuccess", function() {
     log('#logs', "The detector reports initialized");
-    // Display canvas instead of video feed because we want to draw the feature points on it
-    $("#face_video_canvas").css("display", "block");
-    $("#face_video_canvas").css("margin", "auto");
-    $("#face_video").css("display", "none");
+    //Display canvas instead of video feed because we want to draw the feature points on it
+    //$("#face_video_canvas").css("display", "block");
+    //$("#face_video_canvas").css("margin", "auto");
+    //$("#face_video").css("display", "none");
   });
 
   //Add a callback to notify when camera access is allowed
@@ -48,20 +48,22 @@ $(document).ready(function() {
   //Faces object contains probabilities for all the different expressions, emotions and appearance metrics
   detector.addEventListener("onImageResultsSuccess", function(faces, image, timestamp) {
     $('#results').html("");
-    // log('#results', "Timestamp: " + timestamp.toFixed(2));
-    // log('#results', "Number of faces found: " + faces.length);
+    log('#results', "Timestamp: " + timestamp.toFixed(2));
+    log('#results', "Number of faces found: " + faces.length);
     if (faces.length > 0) {
-      // log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
+      log('#results', "Appearance: " + JSON.stringify(faces[0].appearance));
       log('#results', "Emotions: " + JSON.stringify(faces[0].emotions, function(key, val) {
         queue.push(faces[0].emotions)
           return val.toFixed ? Number(val.toFixed(0)) : val;
         }));
-    //  log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
-        //  return val.toFixed ? Number(val.toFixed(0)) : val;
-      //  };
-      // log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
-      drawFeaturePoints(image, faces[0].featurePoints);
-    });
+      log('#results', "Expressions: " + JSON.stringify(faces[0].expressions, function(key, val) {
+          return val.toFixed ? Number(val.toFixed(0)) : val;
+        }));
+      log('#results', "Emoji: " + faces[0].emojis.dominantEmoji);
+      //drawFeaturePoints(image, faces[0].featurePoints);
+    }
+  }
+);
 
   // Subscribe to pubnub
   var pubnub = new PubNub({
@@ -86,13 +88,6 @@ $(document).ready(function() {
      queue = []
      var emotions = {"valence": avgValence, "engagement": avgEngagement}
      return emotions
-   }
-
-   function avgEmotion(arr, emotion){
-     added_emotion = arr.reduce(function(acc, val) {
-        return acc + val.emotion;
-      }, 0);
-     avg_emotion = added_emotion / arr.length
    }
 
   function publishMessage(emotions) {
@@ -200,20 +195,20 @@ function onReset() {
   }
 };
 
-//Draw the detected facial feature points on the image
-function drawFeaturePoints(img, featurePoints) {
-       var contxt = $('#face_video_canvas')[0].getContext('2d');
-
-       var hRatio = contxt.canvas.width / img.width;
-       var vRatio = contxt.canvas.height / img.height;
-       var ratio = Math.min(hRatio, vRatio);
-
-       contxt.strokeStyle = "#FFFFFF";
-       for (var id in featurePoints) {
-         contxt.beginPath();
-         contxt.arc(featurePoints[id].x,
-           featurePoints[id].y, 2, 0, 2 * Math.PI);
-         contxt.stroke();
-
-       }
-     }
+////Draw the detected facial feature points on the image
+//function drawFeaturePoints(img, featurePoints) {
+//  var contxt = $('#face_video_canvas')[0].getContext('2d');
+//
+//  var hRatio = contxt.canvas.width / img.width;
+//  var vRatio = contxt.canvas.height / img.height;
+//  var ratio = Math.min(hRatio, vRatio);
+//
+//  contxt.strokeStyle = "#FFFFFF";
+//  for (var id in featurePoints) {
+//    contxt.beginPath();
+//    contxt.arc(featurePoints[id].x,
+//      featurePoints[id].y, 2, 0, 2 * Math.PI);
+//    contxt.stroke();
+//
+//  }
+//}
